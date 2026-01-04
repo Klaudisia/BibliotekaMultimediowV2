@@ -1,0 +1,101 @@
+﻿@page "/"
+@using BibliotekaMultimediowV2.Database
+@using BibliotekaMultimediowV2.Types
+@rendermode InteractiveServer
+@inject MediaDb db
+<PageTitle>Multimedia</PageTitle>
+
+<h1>Lista</h1>
+
+<table class="table table-striped table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Rodzaj</th>
+        <th>Tytuł</th>
+        <th>Autor</th>
+        <th>Rok</th>
+        <th>Opcje</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var movie in mylistmovies)
+    {
+        <tr>
+            <td>@movie.Id</td>
+            <td>
+                <span class="badge rounded-pill badge-movie">
+                    @movie.Rodzaj
+                </span>
+            </td>
+            <td>@movie.Title</td>
+            <td>@movie.Author</td>
+            <td>@movie.Year</td>
+            <td>
+                <button class="btn btn-danger btn-sm" @onclick="@(() => Remove(movie.Id))">
+                    <i class="bi bi-trash-fill"></i>
+                </button>
+            </td>
+        </tr>
+    }
+    @foreach (var ebook in mylistebooks)
+    {
+        <tr>
+            <td>@ebook.Id</td>
+            <td>
+                <span class="badge rounded-pill badge-ebook">
+                    @ebook.Rodzaj
+                </span>
+            </td>
+            <td>@ebook.Title</td>
+            <td>@ebook.Author</td>
+            <td>@ebook.Year</td>
+            <td>
+                <button class="btn btn-danger btn-sm" @onclick="@(() => Remove(ebook.Id))">
+                    <i class="bi bi-trash-fill"></i>
+                </button></td>
+        </tr>
+    }
+    </tbody>
+</table>
+@code{
+    private List<Ebook> mylistebooks = new List<Ebook>();
+    private List<Movie> mylistmovies = new List<Movie>();
+    
+    protected override void OnInitialized()
+    {
+        mylistebooks = db.Ebooks.ToList();
+        mylistmovies = db.Movies.ToList();
+    }
+
+    void Remove(int id)
+    {
+        var ebookDb = db.Ebooks.FirstOrDefault(x => x.Id == id);
+        var movieDb = db.Movies.FirstOrDefault(x => x.Id == id);
+        if (ebookDb != null)
+        {
+            db.Ebooks.Remove(ebookDb);
+            db.SaveChanges();
+        }
+
+        if (movieDb != null)
+        {
+            db.Movies.Remove(movieDb);
+            db.SaveChanges();
+        }
+
+        var ebookUi = mylistebooks.FirstOrDefault(x => x.Id == id);
+        var movieUi = mylistmovies.FirstOrDefault(x => x.Id == id);
+        if (ebookUi != null)
+        {
+            mylistebooks.Remove(ebookUi);
+        }
+
+        if (movieUi != null)
+        {
+            mylistmovies.Remove(movieUi);
+        }
+    }
+    
+
+}

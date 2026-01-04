@@ -1,0 +1,48 @@
+﻿@page "/new-ebook"
+@using BibliotekaMultimediowV2.Database
+@using Microsoft.AspNetCore.Components.Forms
+@using BibliotekaMultimediowV2.Types
+@rendermode InteractiveServer
+@inject MediaDb db
+@inject NavigationManager Navigation
+
+<PageTitle>Nowy Ebook</PageTitle>
+
+<h1>Nowy Ebook</h1>
+
+<EditForm Model="@newEbook" OnValidSubmit="SaveEbook">
+    
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label>Tytuł:</label>
+        <InputText @bind-Value="newEbook.Title" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Autor:</label>
+        <InputText @bind-Value="newEbook.Author" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Rok:</label>
+        <InputNumber @bind-Value="newEbook.Year" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Zapisz Ebooka</button>
+
+</EditForm>
+
+@code {
+
+    private Ebook newEbook = new Ebook();
+
+    private void SaveEbook()
+    {
+        db.Ebooks.Add(newEbook);
+        db.SaveChanges();
+        Navigation.NavigateTo("/");
+    }
+
+}
