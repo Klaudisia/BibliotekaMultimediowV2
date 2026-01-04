@@ -9,59 +9,125 @@
 
 <table class="table table-striped table-hover">
     <thead>
-    <tr>
-        <th>Id</th>
-        <th>Rodzaj</th>
-        <th>Tytuł</th>
-        <th>Autor</th>
-        <th>Rok</th>
-        <th>Opcje</th>
-    </tr>
+        <tr>
+            <th>Id</th>
+            <th>Rodzaj</th>
+            <th>Tytuł</th>
+            <th>Autor</th>
+            <th>Rok</th>
+            <th>Opcje</th>
+        </tr>
     </thead>
     <tbody>
-    @foreach (var movie in mylistmovies)
-    {
-        <tr>
-            <td>@movie.Id</td>
-            <td>
-                <span class="badge rounded-pill badge-movie">
-                    @movie.Rodzaj
-                </span>
-            </td>
-            <td>@movie.Title</td>
-            <td>@movie.Author</td>
-            <td>@movie.Year</td>
-            <td>
-                <button class="btn btn-danger btn-sm" @onclick="@(() => Remove(movie.Id))">
-                    <i class="bi bi-trash-fill"></i>
-                </button>
-            </td>
-        </tr>
-    }
-    @foreach (var ebook in mylistebooks)
-    {
-        <tr>
-            <td>@ebook.Id</td>
-            <td>
-                <span class="badge rounded-pill badge-ebook">
-                    @ebook.Rodzaj
-                </span>
-            </td>
-            <td>@ebook.Title</td>
-            <td>@ebook.Author</td>
-            <td>@ebook.Year</td>
-            <td>
-                <button class="btn btn-danger btn-sm" @onclick="@(() => Remove(ebook.Id))">
-                    <i class="bi bi-trash-fill"></i>
-                </button></td>
-        </tr>
-    }
+        @foreach (var movie in mylistmovies)
+        {
+            <tr>
+                @if (edytowanyfilm == movie)
+                {
+                    //TRYB EDYCJI
+                    <td>@movie.Id</td>
+                    <td>@movie.Rodzaj</td>
+                    <td>
+                        <input @bind="movie.Title" class="form-control" />
+                    </td>
+                    <td>
+                        <input @bind="movie.Author" class="form-control" />
+                    </td>
+                    <td>
+                        <input @bind="movie.Year" type="number" class="form-control" />
+                    </td>
+                    <td>
+                        <button class="btn btn-success btn-sm" @onclick="@(() => SaveMovie(movie))">
+                            <i class="bi bi-check-lg"></i>
+                        </button>
+                        <button class="btn btn-secondary btn-sm" @onclick="CancelMovie">
+                            Anuluj
+                        </button>
+                    </td>
+                }
+                else
+                {
+                    //TRYB NORMALNY
+                    <td>@movie.Id</td>
+                    <td>
+                        <span class="badge rounded-pill badge-movie">
+                            @movie.Rodzaj
+                        </span>
+                    </td>
+                    <td>@movie.Title</td>
+                    <td>@movie.Author</td>
+                    <td>@movie.Year</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" @onclick="() => EditMovie(movie)">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" @onclick="@(() => Remove(movie.Id))">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </td>
+                }
+            </tr>
+        }
+
+        @foreach (var ebook in mylistebooks)
+        {
+            
+            <tr>
+                @if (edytowanyebook == ebook)
+                {
+                    //TRYB EDYCJI
+                    <td>@ebook.Id</td>
+                    <td>@ebook.Rodzaj</td>
+                    <td>
+                        <input @bind="ebook.Title" class="form-control" />
+                    </td>
+                    <td>
+                        <input @bind="ebook.Author" class="form-control" />
+                    </td>
+                    <td>
+                        <input @bind="ebook.Year" type="number" class="form-control" />
+                    </td>
+                    <td>
+                        <button class="btn btn-success btn-sm" @onclick="@(() => SaveEbook(ebook))">
+                            <i class="bi bi-check-lg"></i>
+                        </button>
+                        <button class="btn btn-secondary btn-sm" @onclick="CancelEbook">
+                            Anuluj
+                        </button>
+                    </td>
+                }
+                else
+                {
+                    <td>@ebook.Id</td>
+                    <td>
+                        <span class="badge rounded-pill badge-ebook">
+                            @ebook.Rodzaj
+                        </span>
+                    </td>
+                    <td>@ebook.Title</td>
+                    <td>@ebook.Author</td>
+                    <td>@ebook.Year</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" @onclick="() => EditEbook(ebook)">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" @onclick="@(() => Remove(ebook.Id))">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </td>
+                }
+            </tr>
+        }
     </tbody>
 </table>
-@code{
+
+@code {
     private List<Ebook> mylistebooks = new List<Ebook>();
     private List<Movie> mylistmovies = new List<Movie>();
-    
+
+    private Movie? edytowanyfilm = null;
+    private Ebook? edytowanyebook = null;
+
     protected override void OnInitialized()
     {
         mylistebooks = db.Ebooks.ToList();
@@ -86,16 +152,36 @@
 
         var ebookUi = mylistebooks.FirstOrDefault(x => x.Id == id);
         var movieUi = mylistmovies.FirstOrDefault(x => x.Id == id);
-        if (ebookUi != null)
-        {
-            mylistebooks.Remove(ebookUi);
-        }
-
-        if (movieUi != null)
-        {
-            mylistmovies.Remove(movieUi);
-        }
+        if (ebookUi != null) mylistebooks.Remove(ebookUi);
+        if (movieUi != null) mylistmovies.Remove(movieUi);
     }
-    
 
+    private void EditEbook(Ebook ebook)
+    {
+        edytowanyebook = ebook;
+    }
+    private void EditMovie(Movie film)
+    {
+        edytowanyfilm = film;
+    }
+
+    private void SaveEbook(Ebook ebook)
+    {
+        db.SaveChanges();
+        edytowanyebook = null;
+    }
+    private void SaveMovie(Movie film)
+    {
+        db.SaveChanges();
+        edytowanyfilm = null; 
+    }
+
+    private void CancelEbook()
+    {
+        edytowanyebook = null;
+    }
+    private void CancelMovie()
+    {
+        edytowanyfilm = null;
+    }
 }
