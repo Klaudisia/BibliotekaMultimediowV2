@@ -16,6 +16,11 @@ a, .btn-link {
     color: white;
 }
 
+.badge-audiobook {
+    background-color: #3753dd;
+    color: white;
+}
+
 
 .btn-primary {
     color: #fff;

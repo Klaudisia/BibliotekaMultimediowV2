@@ -174,5 +174,5 @@
 /Users/magdalenakokoszanek/RiderProjects/BibliotekaMultimediowV2/BibliotekaMultimediowV2/bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 /Users/magdalenakokoszanek/RiderProjects/BibliotekaMultimediowV2/BibliotekaMultimediowV2/obj/Debug/net9.0/BibliotekaMultimediowV2.csproj.AssemblyReference.cache
 /Users/magdalenakokoszanek/RiderProjects/BibliotekaMultimediowV2/BibliotekaMultimediowV2/obj/Debug/net9.0/Bibliote.E3A78406.Up2Date
-/Users/magdalenakokoszanek/RiderProjects/BibliotekaMultimediowV2/BibliotekaMultimediowV2/obj/Debug/net9.0/compressed/wlc86pg33l-noj2cvg7ik.gz
 /Users/magdalenakokoszanek/RiderProjects/BibliotekaMultimediowV2/BibliotekaMultimediowV2/obj/Debug/net9.0/BibliotekaMultimediowV2.sourcelink.json
+/Users/magdalenakokoszanek/RiderProjects/BibliotekaMultimediowV2/BibliotekaMultimediowV2/obj/Debug/net9.0/compressed/wlc86pg33l-8so62kop3n.gz

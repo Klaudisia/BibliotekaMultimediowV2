@@ -2,6 +2,7 @@
 using BibliotekaMultimediowV2.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BibliotekaMultimediowV2.Migrations
 {
     [DbContext(typeof(MediaDb))]
-    partial class MediaDbModelSnapshot : ModelSnapshot
+    [Migration("20260106193149_DodanieAudiobooka")]
+    partial class DodanieAudiobooka
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

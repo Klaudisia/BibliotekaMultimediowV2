@@ -15,10 +15,61 @@
             <th>Tytuł</th>
             <th>Autor</th>
             <th>Rok</th>
+            <th>Cena</th>
             <th>Opcje</th>
         </tr>
     </thead>
     <tbody>
+        @foreach (var audiobook in mylistaudiobooks)
+        {
+            <tr>
+                @if (edytowanyaudiobook == audiobook)
+                {
+                    //TRYB EDYCJI
+                    <td>@audiobook.Id</td>
+                    <td>@audiobook.Rodzaj</td>
+                    <td>
+                        <input @bind="audiobook.Title" class="form-control" />
+                    </td>
+                    <td>
+                        <input @bind="audiobook.Author" class="form-control" />
+                    </td>
+                    <td>
+                        <input @bind="audiobook.Year" type="number" class="form-control" />
+                    </td>
+                    <td>
+                        <button class="btn btn-success btn-sm" @onclick="@(() => SaveAudiobook(audiobook))">
+                            <i class="bi bi-check-lg"></i>
+                        </button>
+                        <button class="btn btn-secondary btn-sm" @onclick="CancelAudiobook">
+                            Anuluj
+                        </button>
+                    </td>
+                }
+                else
+                {
+                    //TRYB NORMALNY
+                    <td>@audiobook.Id</td>
+                    <td>
+                        <span class="badge rounded-pill badge-audiobook">
+                            @audiobook.Rodzaj
+                        </span>
+                    </td>
+                    <td>@audiobook.Title</td>
+                    <td>@audiobook.Author</td>
+                    <td>@audiobook.Year</td>
+                    <td>@audiobook.Price zł</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" @onclick="() => EditAudiobook(audiobook)">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" @onclick="@(() => Remove(audiobook.Id))">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </td>
+                }
+            </tr>
+        }
         @foreach (var movie in mylistmovies)
         {
             <tr>
@@ -57,6 +108,7 @@
                     <td>@movie.Title</td>
                     <td>@movie.Author</td>
                     <td>@movie.Year</td>
+                    <td>@movie.Price zł</td>
                     <td>
                         <button class="btn btn-warning btn-sm" @onclick="() => EditMovie(movie)">
                             <i class="bi bi-pencil"></i>
@@ -97,6 +149,7 @@
                     </td>
                 }
                 else
+                    //tryb normalny
                 {
                     <td>@ebook.Id</td>
                     <td>
@@ -107,6 +160,7 @@
                     <td>@ebook.Title</td>
                     <td>@ebook.Author</td>
                     <td>@ebook.Year</td>
+                    <td>@ebook.Price zł</td>
                     <td>
                         <button class="btn btn-warning btn-sm" @onclick="() => EditEbook(ebook)">
                             <i class="bi bi-pencil"></i>
@@ -124,20 +178,24 @@
 @code {
     private List<Ebook> mylistebooks = new List<Ebook>();
     private List<Movie> mylistmovies = new List<Movie>();
+    private List<Audiobook> mylistaudiobooks = new List<Audiobook>();
 
     private Movie? edytowanyfilm = null;
     private Ebook? edytowanyebook = null;
+    private Audiobook? edytowanyaudiobook = null;
 
     protected override void OnInitialized()
     {
         mylistebooks = db.Ebooks.ToList();
         mylistmovies = db.Movies.ToList();
+        mylistaudiobooks = db.Audiobooks.ToList();
     }
 
     void Remove(int id)
     {
         var ebookDb = db.Ebooks.FirstOrDefault(x => x.Id == id);
         var movieDb = db.Movies.FirstOrDefault(x => x.Id == id);
+        var audiobookDb = db.Audiobooks.FirstOrDefault(x => x.Id == id);
         if (ebookDb != null)
         {
             db.Ebooks.Remove(ebookDb);
@@ -150,10 +208,18 @@
             db.SaveChanges();
         }
 
+        if (audiobookDb != null)
+        {
+            db.Audiobooks.Remove(audiobookDb);
+            db.SaveChanges();
+        }
+
         var ebookUi = mylistebooks.FirstOrDefault(x => x.Id == id);
         var movieUi = mylistmovies.FirstOrDefault(x => x.Id == id);
+        var audiobookUi = mylistaudiobooks.FirstOrDefault(x => x.Id == id);
         if (ebookUi != null) mylistebooks.Remove(ebookUi);
         if (movieUi != null) mylistmovies.Remove(movieUi);
+        if (audiobookUi != null) mylistaudiobooks.Remove(audiobookUi);
     }
 
     private void EditEbook(Ebook ebook)
@@ -163,6 +229,11 @@
     private void EditMovie(Movie film)
     {
         edytowanyfilm = film;
+    }
+
+    private void EditAudiobook(Audiobook audiobook)
+    {
+        edytowanyaudiobook = audiobook;
     }
 
     private void SaveEbook(Ebook ebook)
@@ -176,6 +247,11 @@
         edytowanyfilm = null; 
     }
 
+    private void SaveAudiobook(Audiobook audiobook)
+    {
+        db.SaveChanges();
+        edytowanyaudiobook = null;
+    }
     private void CancelEbook()
     {
         edytowanyebook = null;
@@ -183,5 +259,10 @@
     private void CancelMovie()
     {
         edytowanyfilm = null;
+    }
+
+    private void CancelAudiobook()
+    {
+        edytowanyaudiobook = null;
     }
 }

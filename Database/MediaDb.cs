@@ -11,4 +11,5 @@ public class MediaDb : DbContext
     
     public DbSet<Ebook> Ebooks { get; set; }
     public DbSet<Movie> Movies { get; set; }
+    public DbSet<Audiobook> Audiobooks { get; set; }
 }

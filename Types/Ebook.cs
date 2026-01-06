@@ -2,5 +2,7 @@ namespace BibliotekaMultimediowV2.Types;
 
 public class Ebook : Media
 {
-   public string Rodzaj => "Ebook";
+   public override string Rodzaj => "Ebook";
+
+   public override decimal Price => 5.0m;
 }
