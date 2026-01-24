@@ -5,16 +5,10 @@
 @inject MediaDb db
 <PageTitle>Multimedia</PageTitle>
 
-<h1>Lista</h1>
 
-<input type="search" id="site-search" name="q" class="form-control d-inline-block w-auto" @bind="searchText" @onkeyup="Search" placeholder="Wpisz tytuł lub autora"/>
-
-<button class="btn btn-info">
-    <i class="bi bi-search"></i>
-</button>
-
-<div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+<div class="search">
+    
+    <button class="btn dropdown-toggle btn-purple" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         @currentType :)
     </button>
     <ul class="dropdown-menu">
@@ -23,6 +17,9 @@
         <li><a class="dropdown-item" @onclick='() => SetType("Audiobooki")'>Audiobooki</a></li>
         <li><a class="dropdown-item" @onclick='() => SetType("Ebooki")'>Ebooki</a></li>
     </ul>
+    
+    <input type="search" id="site-search" name="q" class="form-control d-inline-block w-auto" @bind="searchText" @onkeyup="Search" placeholder="Wpisz tytuł lub autora"/>
+
 </div>
 
 <table class="table table-striped table-hover">
@@ -78,17 +75,17 @@
                     <td>@audiobook.Year</td>
                     <td>@audiobook.Price zł</td>
                     <td>
-                        <button class="btn btn-warning btn-sm" @onclick="() => EditAudiobook(audiobook)">
+                        <button class="btn btn-purple btn-sm" @onclick="() => EditAudiobook(audiobook)">
                             <i class="bi bi-pencil"></i>
                         </button>
-                        <button class="btn btn-danger btn-sm" @onclick="@(() => Remove(audiobook.Id))">
+                        <button class="btn btn-danger btn-sm" @onclick="@(() => RemoveAudiobook(audiobook.Id))">
                             <i class="bi bi-trash-fill"></i>
                         </button>
                     </td>
                 }
             </tr>
         }
-        @foreach (var movie in mylistmovies)
+        @foreach (var movie in mylistmovies) //pętla
         {
             <tr>
                 @if (edytowanyfilm == movie)
@@ -128,10 +125,10 @@
                     <td>@movie.Year</td>
                     <td>@movie.Price zł</td>
                     <td>
-                        <button class="btn btn-warning btn-sm" @onclick="() => EditMovie(movie)">
+                        <button class="btn btn-purple btn-sm" @onclick="() => EditMovie(movie)">
                             <i class="bi bi-pencil"></i>
                         </button>
-                        <button class="btn btn-danger btn-sm" @onclick="@(() => Remove(movie.Id))">
+                        <button class="btn btn-danger btn-sm" @onclick="@(() => RemoveMovie(movie.Id))">
                             <i class="bi bi-trash-fill"></i>
                         </button>
                     </td>
@@ -180,10 +177,10 @@
                     <td>@ebook.Year</td>
                     <td>@ebook.Price zł</td>
                     <td>
-                        <button class="btn btn-warning btn-sm" @onclick="() => EditEbook(ebook)">
+                        <button class="btn btn-purple btn-sm" @onclick="() => EditEbook(ebook)">
                             <i class="bi bi-pencil"></i>
                         </button>
-                        <button class="btn btn-danger btn-sm" @onclick="@(() => Remove(ebook.Id))">
+                        <button class="btn btn-danger btn-sm" @onclick="@(() => RemoveEbook(ebook.Id))">
                             <i class="bi bi-trash-fill"></i>
                         </button>
                     </td>
@@ -195,10 +192,10 @@
 
 @code {
 
-    private string searchText = "";
+    private string searchText = ""; //hermetyzacja
     private string currentType = "Wszystkie";
     
-    private List<Ebook> mylistebooks = new List<Ebook>();
+    private List<Ebook> mylistebooks = new List<Ebook>(); //kolekcja generyczna
     private List<Movie> mylistmovies = new List<Movie>();
     private List<Audiobook> mylistaudiobooks = new List<Audiobook>();
     
@@ -226,10 +223,10 @@
     {
         var term = searchText.ToLower();
         bool searchByInput = !string.IsNullOrWhiteSpace(searchText);
-        if (currentType == "Wszystkie" || currentType == "Ebooki")
+        if (currentType == "Wszystkie" || currentType == "Ebooki") //instrukcje warunkowe
         {
             if (searchByInput)
-            {
+            { //LINQ
                 mylistebooks = allebooks.Where(x => (x.Title != null && x.Title.ToLower().Contains(term)) || (x.Author != null && x.Author.ToLower().Contains(term))).ToList();
             }
             else
@@ -283,36 +280,53 @@
     
     
     //usuwanie z bazy danych
-    void Remove(int id)
+    void RemoveEbook(int id)
     {
-        var ebookDb = db.Ebooks.FirstOrDefault(x => x.Id == id);
-        var movieDb = db.Movies.FirstOrDefault(x => x.Id == id);
-        var audiobookDb = db.Audiobooks.FirstOrDefault(x => x.Id == id);
-        if (ebookDb != null)
+        var itemDb = db.Ebooks.FirstOrDefault(x => x.Id == id);
+        if (itemDb != null)
         {
-            db.Ebooks.Remove(ebookDb);
+            db.Ebooks.Remove(itemDb);
             db.SaveChanges();
         }
-
-        if (movieDb != null)
+        var itemUi = allebooks.FirstOrDefault(x => x.Id == id);
+        if (itemUi != null)
         {
-            db.Movies.Remove(movieDb);
+            allebooks.Remove(itemUi);
+        }
+        Search();
+    }
+
+// Usuwanie Filmu
+    void RemoveMovie(int id)
+    {
+        var itemDb = db.Movies.FirstOrDefault(x => x.Id == id);
+        if (itemDb != null)
+        {
+            db.Movies.Remove(itemDb);
             db.SaveChanges();
         }
-
-        if (audiobookDb != null)
+        var itemUi = allmovies.FirstOrDefault(x => x.Id == id);
+        if (itemUi != null)
         {
-            db.Audiobooks.Remove(audiobookDb);
+            allmovies.Remove(itemUi);
+        }
+        Search();
+    }
+
+// Usuwanie Audiobooka
+    void RemoveAudiobook(int id)
+    {
+        var itemDb = db.Audiobooks.FirstOrDefault(x => x.Id == id);
+        if (itemDb != null)
+        {
+            db.Audiobooks.Remove(itemDb);
             db.SaveChanges();
         }
-
-        var ebookUi = allebooks.FirstOrDefault(x => x.Id == id);
-        var movieUi = allmovies.FirstOrDefault(x => x.Id == id);
-        var audiobookUi = allaudiobooks.FirstOrDefault(x => x.Id == id);
-        if (ebookUi != null) allebooks.Remove(ebookUi);
-        if (movieUi != null) allmovies.Remove(movieUi);
-        if (audiobookUi != null) allaudiobooks.Remove(audiobookUi);
-        
+        var itemUi = allaudiobooks.FirstOrDefault(x => x.Id == id);
+        if (itemUi != null)
+        {
+            allaudiobooks.Remove(itemUi);
+        }
         Search();
     }
     //edytowanie

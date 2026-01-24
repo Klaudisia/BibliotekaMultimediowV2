@@ -175,4 +175,4 @@
 /Users/magdalenakokoszanek/RiderProjects/BibliotekaMultimediowV2/BibliotekaMultimediowV2/obj/Debug/net9.0/BibliotekaMultimediowV2.csproj.AssemblyReference.cache
 /Users/magdalenakokoszanek/RiderProjects/BibliotekaMultimediowV2/BibliotekaMultimediowV2/obj/Debug/net9.0/Bibliote.E3A78406.Up2Date
 /Users/magdalenakokoszanek/RiderProjects/BibliotekaMultimediowV2/BibliotekaMultimediowV2/obj/Debug/net9.0/BibliotekaMultimediowV2.sourcelink.json
-/Users/magdalenakokoszanek/RiderProjects/BibliotekaMultimediowV2/BibliotekaMultimediowV2/obj/Debug/net9.0/compressed/wlc86pg33l-8so62kop3n.gz
+/Users/magdalenakokoszanek/RiderProjects/BibliotekaMultimediowV2/BibliotekaMultimediowV2/obj/Debug/net9.0/compressed/wlc86pg33l-zwfn8ur1xi.gz

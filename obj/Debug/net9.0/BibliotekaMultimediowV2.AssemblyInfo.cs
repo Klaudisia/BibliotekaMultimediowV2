@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BibliotekaMultimediowV2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+836ba45115efbe65ee2c5c57812614069cc16ce3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cdd496e315094faf4dfd51b2c3fb112867b1fbe1")]
 [assembly: System.Reflection.AssemblyProductAttribute("BibliotekaMultimediowV2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BibliotekaMultimediowV2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
